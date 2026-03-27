@@ -51,4 +51,35 @@ public class MovieService {
         Page<Movie> page = movieRepository.findAll(pageable);
         return toPagedResponse(page);
     }
+
+    public PagedResponse<MovieResponse> search(String title, String genre, Integer releaseYear, Pageable pageable) {
+        log.debug("Searching movies - title: {}, genre: {}, releaseYear: {}", title, genre, releaseYear);
+        Page<Movie> page = movieRepository.search(
+                blankToNull(title),
+                blankToNull(genre),
+                releaseYear,
+                pageable);
+        log.debug("Search returned {} results", page.getTotalElements());
+        return toPagedResponse(page);
+    }
+
+    @Transactional
+    public MovieResponse update(String id, MovieRequest request) {
+        log.debug("Updating movie id: {}", id);
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Update failed - movie not found: {}", id);
+                    return new IllegalArgumentException("Movie not found with id: " + id);
+                });
+
+        movie.setTitle(request.title());
+        movie.setGenres(request.genres());
+        movie.setReleaseYear(request.releaseYear());
+        movie.setDescription(request.description());
+        movie.setPosterUrl(request.posterUrl());
+
+        Movie saved = movieRepository.save(movie);
+        log.info("Movie updated - id: {}, title: {}", saved.getId(), saved.getTitle());
+        return toResponse(saved);
+    }
 }
