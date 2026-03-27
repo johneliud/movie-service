@@ -55,4 +55,20 @@ public class MovieController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(movieService.search(title, genre, releaseYear, pageable));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieResponse> findById(@PathVariable String id) {
+        log.info("GET /api/movies/{} - Fetching movie", id);
+        return ResponseEntity.ok(movieService.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<MovieResponse> update(@PathVariable String id,
+                                                @Valid @RequestBody MovieRequest request) {
+        log.info("PUT /api/movies/{} - Updating movie", id);
+        MovieResponse response = movieService.update(id, request);
+        log.info("PUT /api/movies/{} - Update successful", id);
+        return ResponseEntity.ok(response);
+    }
 }
