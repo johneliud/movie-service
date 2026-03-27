@@ -35,4 +35,20 @@ public class MovieService {
         log.info("Movie created - id: {}, title: {}", saved.getId(), saved.getTitle());
         return toResponse(saved);
     }
+
+    public MovieResponse findById(String id) {
+        log.debug("Fetching movie by id: {}", id);
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Movie not found - id: {}", id);
+                    return new IllegalArgumentException("Movie not found with id: " + id);
+                });
+        return toResponse(movie);
+    }
+
+    public PagedResponse<MovieResponse> findAll(Pageable pageable) {
+        log.debug("Fetching all movies - page: {}, size: {}", pageable.getPageNumber(), pageable.getPageSize());
+        Page<Movie> page = movieRepository.findAll(pageable);
+        return toPagedResponse(page);
+    }
 }
