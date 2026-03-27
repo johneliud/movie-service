@@ -1,5 +1,6 @@
 package io.github.johneliud.movie_service.controller;
 
+import io.github.johneliud.movie_service.dto.AverageRatingUpdateRequest;
 import io.github.johneliud.movie_service.dto.MovieRequest;
 import io.github.johneliud.movie_service.dto.MovieResponse;
 import io.github.johneliud.movie_service.dto.PagedResponse;
@@ -79,6 +80,14 @@ public class MovieController {
         log.info("DELETE /api/movies/{} - Deleting movie", id);
         movieService.delete(id);
         log.info("DELETE /api/movies/{} - Deletion successful", id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/average-rating")
+    public ResponseEntity<Void> updateAverageRating(@PathVariable String id,
+                                                    @RequestBody AverageRatingUpdateRequest request) {
+        log.info("PATCH /api/movies/{}/average-rating - value: {}", id, request.averageRating());
+        movieService.updateAverageRating(id, request.averageRating());
         return ResponseEntity.noContent().build();
     }
 }
