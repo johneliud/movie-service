@@ -71,4 +71,13 @@ public class MovieController {
         log.info("PUT /api/movies/{} - Update successful", id);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        log.info("DELETE /api/movies/{} - Deleting movie", id);
+        movieService.delete(id);
+        log.info("DELETE /api/movies/{} - Deletion successful", id);
+        return ResponseEntity.noContent().build();
+    }
 }
