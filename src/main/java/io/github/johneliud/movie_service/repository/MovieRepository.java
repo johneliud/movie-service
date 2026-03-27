@@ -13,7 +13,8 @@ public interface MovieRepository extends Neo4jRepository<Movie, String> {
             MATCH (m:Movie)
             WHERE ($title IS NULL OR toLower(m.title) CONTAINS toLower($title))
               AND ($genre IS NULL OR $genre IN m.genres)
-              AND ($releaseYear IS NULL OR m.releaseYear = $releaseYear)
+              AND ($releaseYearFrom IS NULL OR m.releaseYear >= $releaseYearFrom)
+              AND ($releaseYearTo IS NULL OR m.releaseYear <= $releaseYearTo)
             RETURN m
             ORDER BY m.title ASC
             SKIP $skip LIMIT $limit
@@ -22,12 +23,14 @@ public interface MovieRepository extends Neo4jRepository<Movie, String> {
             MATCH (m:Movie)
             WHERE ($title IS NULL OR toLower(m.title) CONTAINS toLower($title))
               AND ($genre IS NULL OR $genre IN m.genres)
-              AND ($releaseYear IS NULL OR m.releaseYear = $releaseYear)
+              AND ($releaseYearFrom IS NULL OR m.releaseYear >= $releaseYearFrom)
+              AND ($releaseYearTo IS NULL OR m.releaseYear <= $releaseYearTo)
             RETURN count(m)
             """)
     Page<Movie> search(
             @Param("title") String title,
             @Param("genre") String genre,
-            @Param("releaseYear") Integer releaseYear,
+            @Param("releaseYearFrom") Integer releaseYearFrom,
+            @Param("releaseYearTo") Integer releaseYearTo,
             Pageable pageable);
 }
