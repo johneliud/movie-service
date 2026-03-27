@@ -31,4 +31,16 @@ public class MovieController {
         log.info("POST /api/movies - Movie created with id: {}", response.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping
+    public ResponseEntity<PagedResponse<MovieResponse>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "title") String sort,
+            @RequestParam(defaultValue = "asc") String direction) {
+        log.info("GET /api/movies - page: {}, size: {}, sort: {} {}", page, size, sort, direction);
+        Sort.Direction dir = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(dir, sort));
+        return ResponseEntity.ok(movieService.findAll(pageable));
+    }
 }
