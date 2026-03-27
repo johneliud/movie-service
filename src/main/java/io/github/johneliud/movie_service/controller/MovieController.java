@@ -48,12 +48,13 @@ public class MovieController {
     public ResponseEntity<PagedResponse<MovieResponse>> search(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String genre,
-            @RequestParam(required = false) Integer releaseYear,
+            @RequestParam(required = false) Integer releaseYearFrom,
+            @RequestParam(required = false) Integer releaseYearTo,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        log.info("GET /api/movies/search - title: {}, genre: {}, releaseYear: {}", title, genre, releaseYear);
+        log.info("GET /api/movies/search - title: {}, genre: {}, releaseYearFrom: {}, releaseYearTo: {}", title, genre, releaseYearFrom, releaseYearTo);
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(movieService.search(title, genre, releaseYear, pageable));
+        return ResponseEntity.ok(movieService.search(title, genre, releaseYearFrom, releaseYearTo, pageable));
     }
 
     @GetMapping("/{id}")
