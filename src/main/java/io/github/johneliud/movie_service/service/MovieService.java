@@ -82,4 +82,25 @@ public class MovieService {
         log.info("Movie updated - id: {}, title: {}", saved.getId(), saved.getTitle());
         return toResponse(saved);
     }
+
+    @Transactional
+    public void delete(String id) {
+        log.debug("Deleting movie id: {}", id);
+        if (!movieRepository.existsById(id)) {
+            log.warn("Delete failed - movie not found: {}", id);
+            throw new IllegalArgumentException("Movie not found with id: " + id);
+        }
+        movieRepository.deleteById(id);
+        log.info("Movie deleted - id: {}", id);
+    }
+
+    @Transactional
+    public void updateAverageRating(String id, double averageRating) {
+        log.debug("Updating averageRating for movie id: {} to {}", id, averageRating);
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Movie not found with id: " + id));
+        movie.setAverageRating(averageRating);
+        movieRepository.save(movie);
+        log.info("AverageRating updated - id: {}, rating: {}", id, averageRating);
+    }
 }
