@@ -52,12 +52,13 @@ public class MovieService {
         return toPagedResponse(page);
     }
 
-    public PagedResponse<MovieResponse> search(String title, String genre, Integer releaseYear, Pageable pageable) {
-        log.debug("Searching movies - title: {}, genre: {}, releaseYear: {}", title, genre, releaseYear);
+    public PagedResponse<MovieResponse> search(String title, String genre, Integer releaseYearFrom, Integer releaseYearTo, Pageable pageable) {
+        log.debug("Searching movies - title: {}, genre: {}, releaseYearFrom: {}, releaseYearTo: {}", title, genre, releaseYearFrom, releaseYearTo);
         Page<Movie> page = movieRepository.search(
                 blankToNull(title),
                 blankToNull(genre),
-                releaseYear,
+                releaseYearFrom,
+                releaseYearTo,
                 pageable);
         log.debug("Search returned {} results", page.getTotalElements());
         return toPagedResponse(page);
