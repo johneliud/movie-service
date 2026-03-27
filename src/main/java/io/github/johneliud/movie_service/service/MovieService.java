@@ -103,4 +103,29 @@ public class MovieService {
         movieRepository.save(movie);
         log.info("AverageRating updated - id: {}, rating: {}", id, averageRating);
     }
+
+    private MovieResponse toResponse(Movie movie) {
+        return new MovieResponse(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getGenres(),
+                movie.getReleaseYear(),
+                movie.getDescription(),
+                movie.getPosterUrl(),
+                movie.getAverageRating(),
+                movie.getCreatedAt());
+    }
+
+    private PagedResponse<MovieResponse> toPagedResponse(Page<Movie> page) {
+        return new PagedResponse<>(
+                page.getContent().stream().map(this::toResponse).toList(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages());
+    }
+
+    private String blankToNull(String value) {
+        return (value == null || value.isBlank()) ? null : value;
+    }
 }
