@@ -7,7 +7,12 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MovieRepository extends Neo4jRepository<Movie, String> {
+
+    @Query("MATCH (m:Movie) WHERE m.posterUrl IS NULL RETURN m")
+    List<Movie> findAllWithoutPoster();
 
     @Query(value = """
             MATCH (m:Movie)
