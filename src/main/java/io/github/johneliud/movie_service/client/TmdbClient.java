@@ -19,6 +19,9 @@ public class TmdbClient {
     private final String apiKey;
 
     public TmdbClient(@Value("${tmdb.api.key}") String apiKey) {
+        if (apiKey == null || apiKey.isBlank()) {
+            log.warn("TMDB API key is not configured — poster sync will be skipped");
+        }
         this.apiKey = apiKey;
         this.restClient = RestClient.builder()
                 .baseUrl("https://api.themoviedb.org/3")
@@ -26,6 +29,9 @@ public class TmdbClient {
     }
 
     public Optional<String> findPosterUrl(String title, int year) {
+        if (apiKey == null || apiKey.isBlank()) {
+            return Optional.empty();
+        }
         try {
             TmdbSearchResponse response = restClient.get()
                     .uri(uriBuilder -> uriBuilder
