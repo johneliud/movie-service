@@ -37,17 +37,19 @@ public class TmdbClient {
         return apiKey != null && !apiKey.isBlank();
     }
 
-    public Optional<String> findPosterUrl(String title, int year) {
+    public Optional<String> findPosterUrl(String title, Integer year) {
         if (!isConfigured()) return Optional.empty();
         try {
             TmdbSearchResponse response = restClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/search/movie")
-                            .queryParam("api_key", apiKey)
-                            .queryParam("query", title)
-                            .queryParam("year", year)
-                            .queryParam("include_adult", "false")
-                            .build())
+                    .uri(uriBuilder -> {
+                        var builder = uriBuilder
+                                .path("/search/movie")
+                                .queryParam("api_key", apiKey)
+                                .queryParam("query", title)
+                                .queryParam("include_adult", "false");
+                        if (year != null) builder = builder.queryParam("year", year);
+                        return builder.build();
+                    })
                     .retrieve()
                     .body(TmdbSearchResponse.class);
 
