@@ -5,6 +5,8 @@ import io.github.johneliud.movie_service.dto.MovieRequest;
 import io.github.johneliud.movie_service.dto.MovieResponse;
 import io.github.johneliud.movie_service.dto.PagedResponse;
 import io.github.johneliud.movie_service.service.MovieService;
+
+import java.util.List;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,12 @@ public class MovieController {
         Sort.Direction dir = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(dir, sort));
         return ResponseEntity.ok(movieService.findAll(pageable));
+    }
+
+    @GetMapping("/genres")
+    public ResponseEntity<List<String>> getGenres() {
+        log.info("GET /api/movies/genres");
+        return ResponseEntity.ok(movieService.getGenres());
     }
 
     @GetMapping("/search")
