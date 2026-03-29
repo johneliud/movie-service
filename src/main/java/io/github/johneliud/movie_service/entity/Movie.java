@@ -26,6 +26,8 @@ public class Movie {
     @GeneratedValue(generatorClass = UUIDStringGenerator.class)
     private String id;
 
+    private Integer tmdbId;
+
     private String title;
 
     private List<String> genres;
