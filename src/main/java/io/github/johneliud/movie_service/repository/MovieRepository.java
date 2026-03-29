@@ -14,6 +14,9 @@ public interface MovieRepository extends Neo4jRepository<Movie, String> {
     @Query("MATCH (m:Movie) WHERE m.posterUrl IS NULL RETURN m")
     List<Movie> findAllWithoutPoster();
 
+    @Query("MATCH (m:Movie) UNWIND m.genres AS genre RETURN DISTINCT genre ORDER BY genre")
+    List<String> findAllDistinctGenres();
+
     @Query(value = """
             MATCH (m:Movie)
             WHERE ($title IS NULL OR toLower(m.title) CONTAINS toLower($title))
