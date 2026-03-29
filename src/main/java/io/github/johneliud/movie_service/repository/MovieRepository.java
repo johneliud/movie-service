@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface MovieRepository extends Neo4jRepository<Movie, String> {
 
+    boolean existsByTmdbId(Integer tmdbId);
+
     @Query("MATCH (m:Movie) WHERE m.posterUrl IS NULL RETURN m")
     List<Movie> findAllWithoutPoster();
 
