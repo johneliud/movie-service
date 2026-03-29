@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -124,6 +126,10 @@ public class MovieService {
                 page.getSize(),
                 page.getTotalElements(),
                 page.getTotalPages());
+    }
+
+    public List<String> getGenres() {
+        return movieRepository.findAllDistinctGenres();
     }
 
     private String blankToNull(String value) {
